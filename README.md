@@ -22,7 +22,6 @@ Aplicación web desarrollada con **Angular 20**, que permite buscar Pokémon por
 ## 📸 Capturas
 
 <img width="800" alt="image1" src="https://github.com/user-attachments/assets/89806e30-7d72-462e-89dc-5966d5a8bddf" />
-<img width="800" alt="image2" src="https://github.com/user-attachments/assets/4abbdfd6-01eb-45f3-8a0c-7212772332cb" />
 <img width="2157" height="1258" alt="image" src="https://github.com/user-attachments/assets/cc21255e-cfe6-41b5-a0fd-4f37a0876c66" />
 <img width="2156" height="1259" alt="image" src="https://github.com/user-attachments/assets/66615f7f-cb7f-4e03-9ae0-f205e468e743" />
 <img width="2159" height="1257" alt="image" src="https://github.com/user-attachments/assets/c9d127ba-4b02-4c32-bc18-a6c285268d4a" />

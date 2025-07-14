@@ -1,0 +1,142 @@
+<div class="pokemon-container">
+  <h2>Buscar Pokémon</h2>
+
+  <div class="search-container">
+    <input
+      class="full-width"
+      type="text"
+      [(ngModel)]="pokemonName"
+      placeholder="Ejemplo: pikachu, bulbasaur"
+    />
+    <button class="search-button" (click)="buscarPokemon()">Buscar</button>
+  </div>
+
+  <div class="error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <!-- Card del Pokémon solo si NO se está editando -->
+  <div class="pokemon-card" *ngIf="pokemonData && !isEditing">
+    <h3>{{ pokemonData.name | titlecase }}</h3>
+    <img [src]="pokemonData.image" alt="{{ pokemonData.name }}" />
+    <p><strong>Tipo:</strong> {{ pokemonData.types }}</p>
+    <p><strong>Experiencia:</strong> {{ pokemonData.experience }}</p>
+    <p><strong>Altura:</strong> {{ pokemonData.height }}</p>
+    <p><strong>Peso:</strong> {{ pokemonData.weight }}</p>
+    <a
+      [href]="'https://bulbapedia.bulbagarden.net/wiki/' + (pokemonData.name.charAt(0).toUpperCase() + pokemonData.name.slice(1)) + '_(Pokémon)'"
+      target="_blank"
+    >
+      Ver en Bulbapedia
+    </a>
+  </div>
+
+  <!-- Formulario de edición -->
+  <div *ngIf="isEditing && pokemonData" class="pokemon-card edit-form">
+    <h3>Editar Pokémon</h3>
+
+    <div class="edit-grid">
+      <div class="field-group">
+        <label for="name">Nombre</label>
+        <input id="name" [(ngModel)]="pokemonData.name" placeholder="Nombre" />
+      </div>
+
+      <div class="field-group">
+        <label for="type">Tipo</label>
+        <input id="type" [(ngModel)]="pokemonData.types" placeholder="Tipo" />
+      </div>
+
+      <div class="field-group">
+        <label for="exp">Experiencia</label>
+        <input id="exp" [(ngModel)]="pokemonData.experience" placeholder="Experiencia" />
+      </div>
+
+      <div class="field-group">
+        <label for="height">Altura</label>
+        <input id="height" [(ngModel)]="pokemonData.height" placeholder="Altura" />
+      </div>
+
+      <div class="field-group">
+        <label for="weight">Peso</label>
+        <input id="weight" [(ngModel)]="pokemonData.weight" placeholder="Peso" />
+      </div>
+    </div>
+
+    <div class="edit-buttons">
+      <button class="btn-primary" (click)="guardarEdicion()">Guardar</button>
+      <button class="btn-danger" (click)="cancelarEdicion()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-container" *ngIf="todosLosPokemonesPaginados.length > 0">
+    <h3>Pokémon de la API</h3>
+    <table class="pokemon-table">
+      <thead>
+        <tr>
+          <th>Imagen</th>
+          <th>Nombre</th>
+          <th>Tipo</th>
+          <th>Exp</th>
+          <th>Altura</th>
+          <th>Peso</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of todosLosPokemonesPaginados | slice:0:10">
+          <td><img [src]="p.image" [alt]="p.name" class="thumbnail" /></td>
+          <td>{{ p.name | titlecase }}</td>
+          <td>{{ p.types }}</td>
+          <td>{{ p.experience }}</td>
+          <td>{{ p.height }}</td>
+          <td>{{ p.weight }}</td>
+          <td>
+            <div class="button-group">
+              <button class="small-button view" (click)="verDetalles(p)">Ver más</button>
+              <button class="small-button edit" (click)="editarDesdeTabla(p)">Editar</button>
+              <button class="small-button delete" (click)="confirmarEliminacion(p)">Eliminar</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="paginacion">
+      <button (click)="paginaAnteriorAPI()" [disabled]="paginaAPI === 0">Anterior</button>
+      <ng-container *ngFor="let page of paginasVisibles">
+        <button 
+          (click)="irAPagina(page)" 
+          [disabled]="page === paginaAPI"
+          [ngClass]="{ 'pagina-activa': page === paginaAPI }"
+        >
+          {{ page + 1 }}
+        </button>
+      </ng-container>
+      <button (click)="paginaSiguienteAPI()" [disabled]="paginaAPI + 1 >= totalPaginasAPI">Siguiente</button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" *ngIf="modalActivo">
+    <div class="modal-content">
+      <span class="cerrar" (click)="cerrarModal()">&times;</span>
+      <h3>{{ pokemonSeleccionado.name | titlecase }}</h3>
+      <img [src]="pokemonSeleccionado.image" alt="{{ pokemonSeleccionado.name }}" />
+      <p><strong>Tipo:</strong> {{ pokemonSeleccionado.types }}</p>
+      <p><strong>Experiencia:</strong> {{ pokemonSeleccionado.experience }}</p>
+      <p><strong>Altura:</strong> {{ pokemonSeleccionado.height }}</p>
+      <p><strong>Peso:</strong> {{ pokemonSeleccionado.weight }}</p>
+
+      <a
+        [href]="'https://bulbapedia.bulbagarden.net/wiki/' + (pokemonSeleccionado.name.charAt(0).toUpperCase() + pokemonSeleccionado.name.slice(1)) + '_(Pokémon)'"
+        target="_blank"
+      >
+        Ver detalles en Bulbapedia
+      </a>
+
+      <div class="modal-buttons">
+        <button class="btn-primary" (click)="editarPokemonDesdeModal()">Editar</button>
+        <button class="btn-danger" (click)="confirmarEliminacion(pokemonSeleccionado)">Eliminar</button>
+      </div>
+    </div>
+  </div>
+</div>
